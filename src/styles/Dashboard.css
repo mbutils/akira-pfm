@@ -1,0 +1,88 @@
+.dashboard-container {
+  padding: 1rem;
+}
+
+.stat-card {
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(255, 107, 53, 0.3);
+}
+
+.stat-card-success {
+  border-color: rgba(6, 214, 160, 0.3);
+}
+
+.stat-card-success:hover {
+  border-color: #06D6A0;
+}
+
+.stat-card-danger {
+  border-color: rgba(239, 71, 111, 0.3);
+}
+
+.stat-card-danger:hover {
+  border-color: #EF476F;
+}
+
+.stat-card-warning {
+  border-color: rgba(255, 210, 63, 0.3);
+}
+
+.stat-card-warning:hover {
+  border-color: #FFD23F;
+}
+
+.stat-card-info {
+  border-color: rgba(0, 78, 137, 0.3);
+}
+
+.stat-card-info:hover {
+  border-color: #004E89;
+}
+
+.stat-card-primary {
+  border-color: rgba(255, 107, 53, 0.3);
+}
+
+.stat-card-primary:hover {
+  border-color: #FF6B35;
+}
+
+.stat-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.overview-card {
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(0, 78, 137, 0.2) 0%, rgba(255, 107, 53, 0.1) 100%);
+  border: 2px solid rgba(255, 107, 53, 0.3);
+}
+
+.overview-card:hover {
+  border-color: #FF6B35;
+}
+
+.card-title-custom {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #FF6B35;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 0.5rem;
+  }
+  
+  .stat-title {
+    font-size: 0.75rem;
+  }
+}

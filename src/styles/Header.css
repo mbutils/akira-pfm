@@ -1,0 +1,46 @@
+.app-header {
+  background: linear-gradient(135deg, #FF6B35 0%, #004E89 100%);
+  padding: 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-title {
+  font-family: 'Righteous', cursive;
+  font-size: 1.8rem;
+  text-align: center;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: linear-gradient(45deg, #fff, #FFD23F);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: glow 2s ease-in-out infinite;
+  margin: 0;
+}
+
+@keyframes glow {
+  0%, 100% { 
+    filter: drop-shadow(0 0 8px rgba(255, 210, 63, 0.5)); 
+  }
+  50% { 
+    filter: drop-shadow(0 0 16px rgba(255, 210, 63, 0.8)); 
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 1rem;
+  }
+  
+  .header-title {
+    font-size: 1.4rem;
+  }
+}

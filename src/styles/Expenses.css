@@ -1,0 +1,92 @@
+.expenses-container {
+  padding: 1rem;
+}
+
+.jar-card {
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.jar-actions {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.jar-icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+.jar-name {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.jar-amount {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.expense-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+}
+
+.expense-item-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.expense-item-description {
+  flex: 1;
+  color: #9b9b9b;
+}
+
+.expense-amount {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #EF476F;
+  white-space: nowrap;
+}
+
+.expense-item-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.expense-item-actions button {
+  width: 2rem !important;
+}
+
+@media (max-width: 768px) {
+  .expenses-container {
+    padding: 0.5rem;
+  }
+  
+  .jar-icon {
+    font-size: 2rem;
+  }
+  
+  .jar-amount {
+    font-size: 1.2rem;
+  }
+
+  .expense-item-description {
+    font-size: 0.75rem
+  };
+  .expense-amount {
+    font-size: 1rem;
+  }
+  .expense-item-actions button {
+    width: 1rem !important;
+  }
+}

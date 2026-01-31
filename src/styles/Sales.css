@@ -1,0 +1,32 @@
+.sales-container {
+  padding: 1rem;
+}
+
+.sale-item {
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 4px solid #06D6A0;
+  transition: all 0.3s ease;
+}
+
+.sale-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateX(4px);
+}
+
+.sale-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .sales-container {
+    padding: 0.5rem;
+  }
+  
+  .sale-item {
+    padding: 1rem;
+  }
+}

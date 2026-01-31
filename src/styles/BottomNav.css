@@ -1,0 +1,82 @@
+.bottom-navigation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(26, 26, 46, 0.98);
+  backdrop-filter: blur(10px);
+  border-top: 2px solid #FF6B35;
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem;
+  z-index: 99;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.nav-button {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: rgba(184, 184, 200, 0.8);
+  padding: 0.75rem 0.5rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  font-family: 'iCielBree', 'Work Sans', sans-serif;
+}
+
+.nav-button:hover {
+  color: #FF6B35;
+  transform: translateY(-2px);
+}
+
+.nav-button.active {
+  color: #FF6B35;
+}
+
+.nav-button.active::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background: #FF6B35;
+  border-radius: 0 0 3px 3px;
+}
+
+.nav-button-icon {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.nav-button:hover .nav-button-icon {
+  transform: scale(1.2);
+}
+
+.nav-button.active .nav-button-icon {
+  transform: scale(1.1);
+}
+
+.nav-button-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+  .nav-button-label {
+    font-size: 0.65rem;
+  }
+  
+  .nav-button-icon {
+    font-size: 1.3rem;
+  }
+}
