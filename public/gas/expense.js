@@ -7,49 +7,50 @@ const expenseHeaders = {
 
 function getExpenses(sheetName) {
     try {
-       const sheet = getSpreadSheet(sheetName);
-       if (!sheet) {
-         return json({
-           success: false,
-           message: 'Không tìm thấy sheet: ' + sheetName
-         });
-       }
+        const sheet = getSpreadSheet(sheetName);
+        if (!sheet) {
+            return json({
+                success: false,
+                message: 'Không tìm thấy sheet: ' + sheetName
+            });
+        }
 
-       const lastRow = sheet.getLastRow();
-       if (lastRow < 2) {
-         return json({
-           success: true,
-           data: [],
-           headers: []
-         });
-       }
 
         const headersConfig = expenseHeaders['expense'];
-       const headers = sheet.getRange(headersConfig.row, headersConfig.column, headersConfig.numRows, headersConfig.numColumns).getValues()[0];
-       const values = sheet.getRange(headersConfig.row + 1, headersConfig.column, lastRow - headersConfig.row, headersConfig.numColumns).getValues();
-       var lastIndex = 0;
+        const lastRow = sheet.getLastRow();
+        if (lastRow < headersConfig.row + 1) {
+            return json({
+                success: true,
+                lastIndex: lastRow,
+                data: [],
+                headers: []
+            });
+        }
 
-       const rows = values.filter(row => row[0] !== "")
-         .map((row, index) => {
-         const rowObject = { id: index + headersConfig.dataIndex };
-         headers.forEach((header, i) => {
-            rowObject[header] = row[i];
+        const headers = sheet.getRange(headersConfig.row, headersConfig.column, headersConfig.numRows, headersConfig.numColumns).getValues()[0];
+        const values = sheet.getRange(headersConfig.row + 1, headersConfig.column, lastRow - headersConfig.row, headersConfig.numColumns).getValues();
+        
+        const rows = values.filter(row => row[0] !== "")
+            .map((row, index) => {
+                const rowObject = { id: index + headersConfig.dataIndex };
+                headers.forEach((header, i) => {
+                    rowObject[header] = row[i];
+                });
+                lastIndex = rowObject.id;
+                return rowObject;
+            });
+
+        return json({
+            success: true,
+            data: rows,
+            headers: headers,
+            lastIndex: lastIndex
         });
-        lastIndex = rowObject.id;
-         return rowObject;
-       });
-
-       return json({
-         success: true,
-         data: rows,
-         headers: headers,
-         lastIndex: lastIndex
-       });
     } catch (error) {
-       return json({
-         success: false,
-         message: error.toString()
-       });
+        return json({
+            success: false,
+            message: error.toString()
+        });
     }
 }
 
@@ -143,50 +144,96 @@ function deleteExpense(sheetName, id) {
 
 function getExpenseTotal(sheetName) {
     try {
-       const sheet = getSpreadSheet(sheetName);
-       if (!sheet) {
-         return json({
-           success: false,
-           message: 'Không tìm thấy sheet: ' + sheetName
-         });
-       }
+        const sheet = getSpreadSheet(sheetName);
+        if (!sheet) {
+            return json({
+                success: false,
+                message: 'Không tìm thấy sheet: ' + sheetName
+            });
+        }
 
-       const lastRow = sheet.getLastRow();
-       if (lastRow < 2) {
-         return json({
-           success: true,
-           data: [],
-           headers: []
-         });
-       }
-        
+        const lastRow = sheet.getLastRow();
         const allData = {};
         Object.keys(expenseHeaders).forEach(type => {
             const headersConfig = expenseHeaders[type];
-           const headers = sheet.getRange(headersConfig.row, headersConfig.column, headersConfig.numRows, headersConfig.numColumns).getValues()[0];
-           const values = sheet.getRange(headersConfig.row + 1, headersConfig.column, lastRow - headersConfig.row, headersConfig.numColumns).getValues();
+            let lastIndex = headersConfig.row;
+            const headers = sheet.getRange(headersConfig.row, headersConfig.column, headersConfig.numRows, headersConfig.numColumns).getValues()[0];
+            const values = sheet.getRange(headersConfig.row + 1, headersConfig.column, lastRow - headersConfig.row, headersConfig.numColumns).getValues();
+            
+            const rows = values.filter(row => row[0] !== "")
+                .map((row, index) => {
+                    const rowObject = { id: index + headersConfig.dataIndex };
+                    headers.forEach((header, i) => {
+                        rowObject[header] = row[i];
+                    });
+                    lastIndex = rowObject.id;
+                    return rowObject;
+                });
+            if (type === 'expense') {
+                allData[type] = {data: rows, lastIndex};
+            } else {
+                allData[type] = rows;
+            }
+        })
 
-           const rows = values.filter(row => row[0] !== "")
-            .map((row, index) => {
-             const rowObject = { id: index + headersConfig.dataIndex };
-             headers.forEach((header, i) => {
-                rowObject[header] = row[i];
-            });
-            lastIndex = rowObject.id;
-             return rowObject;
-           });
-          
-            allData[type] = rows;
+        return json({
+            success: true,
+            data: allData,
         });
-
-       return json({
-         success: true,
-         data: allData,
-       });
     } catch (error) {
-       return json({
-         success: false,
-         message: error.toString()
-       });
+        return json({
+            success: false,
+            message: error.toString()
+        });
     }
 }
+
+// function getExpenseTotal(sheetName) {
+//     try {
+//        const sheet = getSpreadSheet(sheetName);
+//        if (!sheet) {
+//          return json({
+//            success: false,
+//            message: 'Không tìm thấy sheet: ' + sheetName
+//          });
+//        }
+
+//        const lastRow = sheet.getLastRow();
+//        if (lastRow < 2) {
+//          return json({
+//            success: true,
+//            data: [],
+//            headers: []
+//          });
+//        }
+        
+//         const allData = {};
+//         Object.keys(expenseHeaders).forEach(type => {
+//             const headersConfig = expenseHeaders[type];
+//            const headers = sheet.getRange(headersConfig.row, headersConfig.column, headersConfig.numRows, headersConfig.numColumns).getValues()[0];
+//            const values = sheet.getRange(headersConfig.row + 1, headersConfig.column, lastRow - headersConfig.row, headersConfig.numColumns).getValues();
+
+//            const rows = values.filter(row => row[0] !== "")
+//             .map((row, index) => {
+//              const rowObject = { id: index + headersConfig.dataIndex };
+//              headers.forEach((header, i) => {
+//                 rowObject[header] = row[i];
+//             });
+//             lastIndex = rowObject.id;
+//              return rowObject;
+//            });
+          
+//             allData[type] = rows;
+//         });
+
+//        return json({
+//          success: true,
+//          data: allData,
+//        });
+//     } catch (error) {
+//        return json({
+//          success: false,
+//          message: error.toString()
+//        });
+//     }
+// }

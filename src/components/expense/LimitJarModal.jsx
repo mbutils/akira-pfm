@@ -1,4 +1,4 @@
-import { Card, Row, Col, Button, Modal, Form, Input, Select, DatePicker, List, Space, Badge, Progress } from 'antd';
+import { Button, Modal, Form, Input, Space } from 'antd';
 import SettingService from '../../services/settingService';
 
 const LimitJarModal = (props) => {

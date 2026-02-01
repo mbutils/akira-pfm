@@ -15,7 +15,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'antd/dist/reset.css';
 // Import custom styles
 import './styles/main.css';
-import SettingService from './services/settingService';
 import { SheetProvider } from './utils/AppContext';
 
 function App() {
@@ -109,7 +108,7 @@ function App() {
         }}
       >
         <div className="app-container">
-          {/* <Header /> */}
+          <Header />
           <main className="content-main">
             {renderContent()}
           </main>

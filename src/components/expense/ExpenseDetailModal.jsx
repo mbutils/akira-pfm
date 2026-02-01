@@ -1,15 +1,12 @@
-import { Card, Row, Col, Button, Modal, Form, Input, Select, DatePicker, List, Space, Badge, Progress } from 'antd';
+import { Row, Col, Button, Modal, Form, Input, Select, DatePicker, Space } from 'antd';
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
 import { useSheet } from '../../utils/AppContext';
 import ExpenseService from '../../services/expenseService';
-
-const { Option } = Select;
 
 const ExpenseDetailModal = (props) => {
     const { visible, onClose, onSubmit, currentExpense, lastIndex } = props;
     const [form] = Form.useForm();
-    const { jars, categories, expenseSrcs } = useSheet();
+    const { jars, categories, expenseSrcs, currentMonth } = useSheet();
 
     const handleSubmit = async (values) => {
         const expense = {
@@ -23,9 +20,11 @@ const ExpenseDetailModal = (props) => {
         };
         var res
         if (currentExpense?.id) {
-            res = await ExpenseService.update(currentExpense.id, expense);
+            res = await ExpenseService.update(currentMonth, currentExpense.id, expense);
         } else {
-            res = await ExpenseService.insert(lastIndex, expense);
+            console.log("insert lastIndex", lastIndex);
+            
+            res = await ExpenseService.insert(currentMonth, lastIndex, expense);
         }
         if (!res.success) {
             messageApi.open({

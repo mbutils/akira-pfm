@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Row, Col, Button, Modal, List, Space, Progress } from 'antd';
+import { Card, Row, Col, Button, Modal, Space, Progress } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, WalletOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { formatCurrency } from '../../utils/helpers';
@@ -8,11 +8,9 @@ import ExpenseService from '../../services/expenseService';
 import { useSheet } from '../../utils/AppContext';
 import ExpenseDetailModal from './ExpenseDetailModal';
 import LimitJarModal from './LimitJarModal';
-import SettingService from '../../services/settingService';
 
-
-function Expenses({ data, setData }) {
-  const { jars, loadSettings, messageApi, refresh } = useSheet();
+function Expenses() {
+  const { jars, loadSettings, messageApi, refresh, currentMonth, isMobile } = useSheet();
   const [dataExpense, setDataExpense] = useState([]);
   const [jarTotal, setJarTotal] = useState([]);
   const [lastIndex, setLastIndex] = useState(0);
@@ -24,29 +22,29 @@ function Expenses({ data, setData }) {
 
   useEffect(() => {
     initData();
-  }, []);
+  }, [currentMonth]);
 
   async function initData() {
     setLoading(true);
-    const res = await ExpenseService.getTotal();
-    console.log("totalRes",res);
-    
+    const res = await ExpenseService.getTotal(currentMonth);
+
     setLoading(false);
-    
+
     if (!res.success) {
       messageApi.open({
         type: 'error',
-        content: 'This is an error message',
+        content: 'Có lỗi rùi!',
       });
       return;
     }
-    var newData = res.data.expense.sort((a, b) => dayjs(b.date, 'DD/MM/YYYY').toDate() - dayjs(a.date, 'DD/MM/YYYY').toDate())
-    .sort((a, b) => b.id - a.id);
+    var newData = res.data.expense.data
+      .sort((a, b) => dayjs(b.date, 'DD/MM/YYYY').toDate() - dayjs(a.date, 'DD/MM/YYYY').toDate())
+      .sort((a, b) => b.id - a.id);
     setDataExpense(newData);
-    setLastIndex(res.lastIndex);
+    setLastIndex(res.data.expense.lastIndex);
     setJarTotal(res.data.jarTotal || []);
   }
-  
+
   const handleEdit = (expense) => {
     setCurrentExpense(expense);
     setAddExpenseModal(true);
@@ -61,7 +59,7 @@ function Expenses({ data, setData }) {
       cancelText: 'Hủy',
       okButtonProps: { danger: true },
       onOk: async () => {
-        const res = await ExpenseService.delete(id);
+        const res = await ExpenseService.delete(currentMonth, id);
         initData();
       }
     });
@@ -79,7 +77,7 @@ function Expenses({ data, setData }) {
   return (
     <div className="expenses-container">
       {/* Jar Cards */}
-      <Card 
+      <Card
         title={<span className="card-title-custom">🏺 Hũ chi tiêu</span>}
         loading={loadSettings}
         className="mb-4 glass-card"
@@ -88,7 +86,7 @@ function Expenses({ data, setData }) {
           {jars?.data?.map(jarItem => {
             return (
               <Col xs={12} sm={12} md={6} lg={6} key={jarItem.jar_id}>
-                <Card 
+                <Card
                   className="jar-card"
                   style={{ borderColor: "#06D6A0" }}
                 >
@@ -106,10 +104,10 @@ function Expenses({ data, setData }) {
                       format={percent => `${getJarPercent(jarItem.jar_id)}%`}
                       percentPosition={{ align: 'center', type: 'inner' }}
                       size={[300, 15]}
-                      />
+                    />
                   </div>
                   <div className="jar-actions">
-                    <EditOutlined style={{ color: '#06D6A0' }} 
+                    <EditOutlined style={{ color: '#06D6A0' }}
                       onClick={() => {
                         setCurrentJar(jarItem);
                         setAddJarModal(true);
@@ -128,8 +126,8 @@ function Expenses({ data, setData }) {
         title={<span className="card-title-custom">📝 Ghi chép chi tiêu</span>}
         loading={loading}
         extra={
-          <Button 
-            type="primary" 
+          <Button
+            type="primary"
             icon={<PlusOutlined />}
             onClick={() => setAddExpenseModal(true)}
           >
@@ -144,43 +142,52 @@ function Expenses({ data, setData }) {
             <p>Chưa có khoản chi tiêu nào</p>
           </div>
         ) : (
-          <List
-            itemLayout="horizontal"
-            dataSource={dataExpense.sort((a, b) => new Date(b.date) - new Date(a.date))}
-            renderItem={expense => {
+          <div className='expense-list'>
+            {dataExpense.map(expense => {
               const jarItem = jars?.data?.find(j => j.jar_id === expense.jar_id);
               return (
-                <div className="expense-item">
+                <div key={expense.id} className="expense-item"
+                  onClick={() => handleEdit(expense)}
+                >
                   <div className="expense-item-content">
                     <div className="expense-item-title">{expense.name}</div>
                     <div className="expense-item-description">
-                      <Space>
-                        <span>{jarItem?.name}</span>
-                        <span>•</span>
-                        <span>{new Date(expense.date).toLocaleDateString('vi-VN')}</span>
-                      </Space>
+                      {isMobile ? (
+                        <div>
+                          <div>{jarItem?.name}</div>
+                          <div>{new Date(expense.date).toLocaleDateString('vi-VN')}</div>
+                        </div>
+                      ) : (
+                        <Space>
+                          <span>{jarItem?.name}</span>
+                          <span>•</span>
+                          <span>{new Date(expense.date).toLocaleDateString('vi-VN')}</span>
+                        </Space>
+                      )}
                     </div>
                   </div>
                   <div className="expense-amount">
                     {formatCurrency(expense.amount)}
                   </div>
                   <div className="expense-item-actions">
-                    <Button 
-                      type="text" 
-                      icon={<EditOutlined />} 
-                      onClick={() => handleEdit(expense)}
-                    />
-                    <Button 
-                      type="text" 
-                      danger 
-                      icon={<DeleteOutlined />} 
+                    {isMobile ? null : (
+                      <Button
+                        type="text"
+                        icon={<EditOutlined />}
+                        onClick={() => handleEdit(expense)}
+                      />
+                    )}
+                    <Button
+                      type="text"
+                      danger
+                      icon={<DeleteOutlined />}
                       onClick={() => handleDelete(expense.id)}
                     />
                   </div>
                 </div>
               );
-            }}
-          />
+            })}
+          </div>
         )}
       </Card>
 
