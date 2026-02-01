@@ -23,7 +23,7 @@
 }
 
 body {
-  font-family: "iCielBree", 'Work Sans', sans-serif;
+  /* font-family: "iCielBree", 'Work Sans', sans-serif; */
   background: var(--bg-main);
   color: var(--text-primary);
   overflow-x: hidden;
@@ -51,7 +51,7 @@ body {
 
 /* Custom Card Title */
 .card-title-custom {
-  font-family: "iCielBree", 'Righteous', cursive;
+  /* font-family: "iCielBree", 'Righteous', cursive; */
   font-size: 1.3rem;
   color: #FF6B35;
   display: flex;

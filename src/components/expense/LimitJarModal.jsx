@@ -1,9 +1,16 @@
 import { Button, Modal, Form, Input, Space } from 'antd';
 import SettingService from '../../services/settingService';
+import { useEffect } from 'react';
 
 const LimitJarModal = (props) => {
     const { visible, onClose, onSubmit, currentJar } = props;
     const [form] = Form.useForm();
+
+    useEffect(() => {
+        if (visible) {
+            form.setFieldsValue(currentJar ? {...currentJar} : {});
+        }
+    }, [visible, currentJar]);
 
     const handleSubmit = async (values) => {
         const jar = {

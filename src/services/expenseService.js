@@ -9,8 +9,8 @@ const ExpenseService = {
         return `expense_${currentMonth?.month}_${currentMonth?.year}`;
     },
     
-    async getAll(currentMonth) {
-        const res = await httpGet(this.API_URL, { action: 'getExpenses', sheetName: this.getSheetName(currentMonth) });
+    async getTotalMonth(currentMonth) {
+        const res = await httpGet(this.API_URL, { action: 'getExpenseTotalMonth', sheetName: this.getSheetName(currentMonth) });
         return res.data;
     },
     async insert(currentMonth, lastIndex, data) {

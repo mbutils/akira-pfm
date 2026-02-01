@@ -7,7 +7,7 @@ const SheetContext = createContext();
 
 export const SheetProvider = ({ children }) => {
     const [jars, setJars] = useState({ data: [] });
-    const [account, setAccount] = useState({ data: [] });
+    const [accounts, setAccounts] = useState({ data: [] });
     const [categories, setCategories] = useState({ data: [] });
     const [expenseSrcs, setExpenseSrcs] = useState({ data: [] });
     const [debtSrcs, setDebtSrcs] = useState({ data: [] });
@@ -22,11 +22,12 @@ export const SheetProvider = ({ children }) => {
     const loadAllData = async () => {
         setLoadSettings(true);
         const res = await SettingService.getAllSettings();
+        console.log("all settings",res);
 
         setLoadSettings(false);
 
         setJars({ ...res.data.jar, data: res.data.jar.data || [] });
-        setAccount({ ...res.data.account, data: res.data.account.data || [] });
+        setAccounts({ ...res.data.account, data: res.data.account.data || [] });
         setCategories({ ...res.data.category, data: res.data.category.data || [] });
         setExpenseSrcs({ ...res.data.expenseSrc, data: res.data.expenseSrc.data || [] });
         setDebtSrcs({ ...res.data.debtSrc, data: res.data.debtSrc.data || [] });
@@ -42,7 +43,7 @@ export const SheetProvider = ({ children }) => {
 
     return (
         <SheetContext.Provider value={{
-            jars, account, categories, expenseSrcs, debtSrcs, setKeys,
+            jars, accounts, categories, expenseSrcs, debtSrcs, setKeys,
             loadSettings, refresh: loadAllData, messageApi,
             setCurrentMonth, currentMonth, isMobile
         }}

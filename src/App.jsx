@@ -103,7 +103,7 @@ function App() {
             colorError: '#EF476F',
             colorInfo: '#004E89',
             borderRadius: 12,
-            fontFamily: "'iCielBree', 'Work Sans', sans-serif",
+            // fontFamily: "'iCielBree', 'Work Sans', sans-serif",
           },
         }}
       >

@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, Row, Col, Button, Modal, Form, Input, Space, Statistic, Alert } from 'antd';
 import { PlusOutlined, MinusOutlined, EditOutlined, BankOutlined } from '@ant-design/icons';
 import { formatCurrency } from '../utils/helpers';
 import '../styles/Accounts.css';
+import { useSheet } from '../utils/AppContext';
+import HistoryService from '../services/historyService';
 
 function Accounts({ data, setData }) {
   const [showModal, setShowModal] = useState(false);
@@ -11,6 +13,17 @@ function Accounts({ data, setData }) {
   const [showIncomeModal, setShowIncomeModal] = useState(false);
   const [form] = Form.useForm();
   const [incomeForm] = Form.useForm();
+
+  const { accounts } = useSheet();
+
+  useEffect(() => {
+    initData();
+  }, []);
+
+  async function initData() {
+    const res = await HistoryService.getAllHistory();
+    console.log("histories",res);
+  }
 
   const accountTypeLabels = {
     personal: 'Cá nhân',
@@ -98,8 +111,8 @@ function Accounts({ data, setData }) {
         className="mb-4 glass-card"
       >
         <Row gutter={[16, 16]}>
-          {data.accounts.map(account => (
-            <Col xs={24} sm={12} md={8} key={account.id}>
+          {accounts?.data?.map(account => (
+            <Col xs={24} sm={12} md={8} key={account.account_id}>
               <Card 
                 className="account-card"
                 style={{ borderColor: account.color }}

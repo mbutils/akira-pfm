@@ -10,14 +10,89 @@ import {
 } from '@ant-design/icons';
 import { formatCurrency } from '../utils/helpers';
 import '../styles/Dashboard.css';
+import { useSheet } from '../utils/AppContext';
+import ExpenseService from '../services/expenseService';
+import { useEffect, useState } from 'react';
 
 function Dashboard({ stats, remainingMoney, isDebtSafe, debtLimit, totalDebtPayment, monthlyIncome }) {
   const debtPercentage = debtLimit > 0 ? Math.min((totalDebtPayment / debtLimit) * 100, 100) : 0;
+  const { currentMonth } = useSheet();
+  const [dataDashboard, setDataDashboard] = useState({});
+  const [loading, setLoading] = useState({});
+
+  useEffect(() => {
+    initData();
+  }, [currentMonth]);
+
+  async function initData() {
+    const data = {};
+
+    // total expense
+    setLoading({ expense: true });
+    ExpenseService.getTotalMonth(currentMonth)
+    .then(res => {
+      data.expense = res.data[0]?.total_month ?? 0;
+    })
+    .finally(() => {
+      setLoading({ expense: false });
+    });
+
+    setDataDashboard(data);
+  }
 
   return (
     <div className="dashboard-container">
       {/* Stats Grid */}
       <Row gutter={[16, 16]} className="mb-4">
+
+        <Col xs={12} sm={12} md={8} lg={8}>
+          <Card className="stat-card stat-card-warning">
+            <Statistic
+              title={<span className="stat-title">💸 Chi cá nhân</span>}
+              value={dataDashboard.expense}
+              formatter={(value) => formatCurrency(value)}
+              valueStyle={{ color: '#FFD23F', fontWeight: 700 }}
+              prefix={<WalletOutlined />}
+              loading={loading.expense}
+            />
+          </Card>
+        </Col>
+
+        <Col xs={12} sm={12} md={8} lg={8}>
+          <Card className={`stat-card ${isDebtSafe ? 'stat-card-success' : 'stat-card-danger'}`}>
+            <Statistic
+              title={<span className="stat-title">💳 Trả nợ</span>}
+              value={stats.totalDebt}
+              formatter={(value) => formatCurrency(value)}
+              valueStyle={{ 
+                color: isDebtSafe ? '#06D6A0' : '#EF476F', 
+                fontWeight: 700 
+              }}
+              prefix={<CreditCardOutlined />}
+            />
+            {!isDebtSafe && (
+              <Badge.Ribbon text="⚠️ Vượt 40%" color="red">
+                <div style={{ height: '10px' }}></div>
+              </Badge.Ribbon>
+            )}
+          </Card>
+        </Col>
+        
+        <Col xs={12} sm={12} md={8} lg={8}>
+          <Card className={`stat-card ${remainingMoney >= 0 ? 'stat-card-success' : 'stat-card-danger'}`}>
+            <Statistic
+              title={<span className="stat-title">✨ Còn lại</span>}
+              value={remainingMoney}
+              formatter={(value) => formatCurrency(value)}
+              valueStyle={{ 
+                color: remainingMoney >= 0 ? '#06D6A0' : '#EF476F', 
+                fontWeight: 700 
+              }}
+              prefix={remainingMoney >= 0 ? <SmileOutlined /> : <WarningOutlined />}
+            />
+          </Card>
+        </Col>
+
         <Col xs={12} sm={12} md={8} lg={8}>
           <Card className="stat-card stat-card-success">
             <Statistic
@@ -50,53 +125,6 @@ function Dashboard({ stats, remainingMoney, isDebtSafe, debtLimit, totalDebtPaym
               formatter={(value) => formatCurrency(value)}
               valueStyle={{ color: '#FF6B35', fontWeight: 700 }}
               prefix={<RiseOutlined />}
-            />
-          </Card>
-        </Col>
-        
-        <Col xs={12} sm={12} md={8} lg={8}>
-          <Card className={`stat-card ${isDebtSafe ? 'stat-card-success' : 'stat-card-danger'}`}>
-            <Statistic
-              title={<span className="stat-title">💳 Trả nợ</span>}
-              value={stats.totalDebt}
-              formatter={(value) => formatCurrency(value)}
-              valueStyle={{ 
-                color: isDebtSafe ? '#06D6A0' : '#EF476F', 
-                fontWeight: 700 
-              }}
-              prefix={<CreditCardOutlined />}
-            />
-            {!isDebtSafe && (
-              <Badge.Ribbon text="⚠️ Vượt 40%" color="red">
-                <div style={{ height: '10px' }}></div>
-              </Badge.Ribbon>
-            )}
-          </Card>
-        </Col>
-        
-        <Col xs={12} sm={12} md={8} lg={8}>
-          <Card className="stat-card stat-card-warning">
-            <Statistic
-              title={<span className="stat-title">💸 Chi cá nhân</span>}
-              value={stats.totalExpenses}
-              formatter={(value) => formatCurrency(value)}
-              valueStyle={{ color: '#FFD23F', fontWeight: 700 }}
-              prefix={<WalletOutlined />}
-            />
-          </Card>
-        </Col>
-        
-        <Col xs={12} sm={12} md={8} lg={8}>
-          <Card className={`stat-card ${remainingMoney >= 0 ? 'stat-card-success' : 'stat-card-danger'}`}>
-            <Statistic
-              title={<span className="stat-title">✨ Còn lại</span>}
-              value={remainingMoney}
-              formatter={(value) => formatCurrency(value)}
-              valueStyle={{ 
-                color: remainingMoney >= 0 ? '#06D6A0' : '#EF476F', 
-                fontWeight: 700 
-              }}
-              prefix={remainingMoney >= 0 ? <SmileOutlined /> : <WarningOutlined />}
             />
           </Card>
         </Col>

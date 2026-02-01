@@ -6,8 +6,8 @@ function getSpreadSheet(sheetName) {
 function doGet(e) {
     const action = e.parameter.action;
     switch (action) {
-        case "getExpenses":
-            return getExpenses(e.parameter.sheetName);
+        case "getExpenseTotalMonth":
+            return getExpenseTotalMonth(e.parameter.sheetName);
         case "insertExpense":
             return insertExpense(e.parameter.sheetName, e.parameter.lastIndex, JSON.parse(e.parameter.data));
         case "updateExpense":
@@ -25,6 +25,16 @@ function doGet(e) {
             return insertSettings(e.parameter.sheetName, e.parameter.lastIndex, e.parameter.type, JSON.parse(e.parameter.data));
         case "updateSettings":
             return updateSettings(e.parameter.sheetName, e.parameter.type, JSON.parse(e.parameter.data));
+
+        case "getAllHistory":
+            return getActiveHistories(e.parameter.sheetName);
+        case "insertHistory":
+            return insertHistory(e.parameter.sheetName, JSON.parse(e.parameter.data));
+        case "updateHistory":
+            return updateHistory(e.parameter.sheetName, e.parameter.id, JSON.parse(e.parameter.data));
+        case "deleteHistory":
+            return deleteHistory(e.parameter.sheetName, e.parameter.id);
+
         default:
             return json({ success: false, message: "Invalid action" });
     }

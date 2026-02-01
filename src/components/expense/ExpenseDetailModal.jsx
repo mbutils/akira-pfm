@@ -2,13 +2,31 @@ import { Row, Col, Button, Modal, Form, Input, Select, DatePicker, Space } from 
 import dayjs from 'dayjs';
 import { useSheet } from '../../utils/AppContext';
 import ExpenseService from '../../services/expenseService';
+import { LoadingOutlined } from '@ant-design/icons';
+import { useEffect, useState } from 'react';
 
 const ExpenseDetailModal = (props) => {
     const { visible, onClose, onSubmit, currentExpense, lastIndex } = props;
     const [form] = Form.useForm();
     const { jars, categories, expenseSrcs, currentMonth } = useSheet();
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (visible) {
+            form.setFieldsValue(currentExpense ? {
+                ...currentExpense,
+                date: dayjs(currentExpense.date)
+            } : {
+                date: dayjs(),
+                category: categories?.data ? categories?.data[0]?.category : null,
+                jar_id: jars?.data ? jars?.data[0]?.jar_id : null,
+                expense_src_id: expenseSrcs?.data ? expenseSrcs?.data[0]?.expense_src_id : null,
+            });
+        }
+    }, [visible, currentExpense]);
 
     const handleSubmit = async (values) => {
+        setLoading(true);
         const expense = {
           name: values.name,
           note: values.note,
@@ -18,14 +36,13 @@ const ExpenseDetailModal = (props) => {
           category: values.category,
           expense_src_id: values.expense_src_id,
         };
-        var res
+        var res;
         if (currentExpense?.id) {
             res = await ExpenseService.update(currentMonth, currentExpense.id, expense);
         } else {
-            console.log("insert lastIndex", lastIndex);
-            
             res = await ExpenseService.insert(currentMonth, lastIndex, expense);
         }
+        setLoading(false);
         if (!res.success) {
             messageApi.open({
                 type: 'error',
@@ -34,8 +51,9 @@ const ExpenseDetailModal = (props) => {
             return;
         }
     
+        form.resetFields();
         onSubmit();
-        handleCancel();
+        onClose();
     };
 
     const handleCancel = () => {
@@ -48,6 +66,7 @@ const ExpenseDetailModal = (props) => {
             title={currentExpense ? 'Sửa chi tiêu' : 'Thêm chi tiêu'}
             open={visible}
             onCancel={handleCancel}
+            onClose={handleCancel}
             footer={null}
             width={500}
         >
@@ -55,15 +74,6 @@ const ExpenseDetailModal = (props) => {
                 form={form}
                 layout="vertical"
                 onFinish={handleSubmit}
-                initialValues={currentExpense ? {
-                    ...currentExpense,
-                    date: dayjs(currentExpense.date)
-                } : {
-                    date: dayjs(),
-                    category: categories?.data ? categories?.data[0]?.category : null,
-                    jar_id: jars?.data ? jars?.data[0]?.jar_id : null,
-                    expense_src_id: expenseSrcs?.data ? expenseSrcs?.data[0]?.expense_src_id : null,
-                }}
             >
                 <Form.Item
                     label="Tên khoản chi"
@@ -145,7 +155,10 @@ const ExpenseDetailModal = (props) => {
                 <Form.Item>
                     <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
                         <Button onClick={handleCancel}>Hủy</Button>
-                        <Button type="primary" htmlType="submit">
+                        <Button type="primary" htmlType="submit"
+                            icon={loading ? <LoadingOutlined spin /> : null}
+                            disabled={loading}
+                        >
                             {currentExpense ? 'Cập nhật' : 'Thêm mới'}
                         </Button>
                     </Space>
