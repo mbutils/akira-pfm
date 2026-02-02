@@ -150,15 +150,16 @@ function getExpenseTotal(sheetName) {
             const headers = sheet.getRange(headersConfig.row, headersConfig.column, headersConfig.numRows, headersConfig.numColumns).getValues()[0];
             const values = sheet.getRange(headersConfig.row + 1, headersConfig.column, lastRow - headersConfig.row, headersConfig.numColumns).getValues();
             
-            const rows = values.filter(row => row[0] !== "")
+            const rows = values
                 .map((row, index) => {
+                    if (row[0] === "") return null;
                     const rowObject = { id: index + headersConfig.dataIndex };
                     headers.forEach((header, i) => {
                         rowObject[header] = row[i];
                     });
                     lastIndex = rowObject.id;
                     return rowObject;
-                });
+                }).filter(r => r !== null);
             if (type === 'expense') {
                 allData[type] = {data: rows, lastIndex};
             } else {

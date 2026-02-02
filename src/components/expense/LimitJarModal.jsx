@@ -1,10 +1,12 @@
 import { Button, Modal, Form, Input, Space } from 'antd';
 import SettingService from '../../services/settingService';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const LimitJarModal = (props) => {
     const { visible, onClose, onSubmit, currentJar } = props;
     const [form] = Form.useForm();
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (visible) {
@@ -13,6 +15,7 @@ const LimitJarModal = (props) => {
     }, [visible, currentJar]);
 
     const handleSubmit = async (values) => {
+        setLoading(true);
         const jar = {
             id: currentJar.id,
           name: currentJar.name,
@@ -20,6 +23,7 @@ const LimitJarModal = (props) => {
           jar_id: currentJar.jar_id,
         };
         var res = await SettingService.updateSettings('jar', jar);
+        setLoading(false);
         if (!res.success) {
             messageApi.open({
                 type: 'error',
@@ -63,7 +67,10 @@ const LimitJarModal = (props) => {
                 <Form.Item>
                     <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
                         <Button onClick={handleCancel}>Hủy</Button>
-                        <Button type="primary" htmlType="submit">
+                        <Button type="primary" htmlType="submit"
+                            icon={loading ? <LoadingOutlined spin /> : null}
+                            disabled={loading}
+                        >
                             {currentJar ? 'Cập nhật' : 'Thêm mới'}
                         </Button>
                     </Space>

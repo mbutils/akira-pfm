@@ -68,6 +68,13 @@ function Expenses() {
   function getJarTotal(jarId) {
     return jarTotal?.filter(t => t.jar_id === jarId)?.[0]?.total || 0;
   }
+  function getJarTotalLimit() {
+    let sum = 0;
+    for (let i = 0; i < jars?.data?.length; i++) {
+      sum += jars?.data?.[i]?.limit || 0;
+    }
+    return sum;
+  }
   function getJarPercent(jarId) {
     const jarItem = jars?.data?.find(j => j.jar_id === jarId);
     if (!jarItem || !jarItem.limit) return 0;
@@ -81,6 +88,12 @@ function Expenses() {
         title={<span className="card-title-custom">🏺 Hũ chi tiêu</span>}
         loading={loadSettings}
         className="mb-4 glass-card"
+        extra={
+          <div className='jar-total-limit'>
+            <span className="card-title-custom me-1">Tổng giới hạn: </span>
+            <span className="jar-amount" style={{ color: "#06D6A0" }}>{formatCurrency(getJarTotalLimit())}</span>
+          </div>
+        }
       >
         <Row gutter={[16, 16]}>
           {jars?.data?.map(jarItem => {
@@ -146,10 +159,10 @@ function Expenses() {
             {dataExpense.map(expense => {
               const jarItem = jars?.data?.find(j => j.jar_id === expense.jar_id);
               return (
-                <div key={expense.id} className="expense-item"
-                  onClick={() => handleEdit(expense)}
-                >
-                  <div className="expense-item-content">
+                <div key={expense.id} className="expense-item">
+                  <div className="expense-item-content"
+                    onClick={() => handleEdit(expense)}
+                  >
                     <div className="expense-item-title">{expense.name}</div>
                     <div className="expense-item-description">
                       {isMobile ? (
@@ -166,7 +179,9 @@ function Expenses() {
                       )}
                     </div>
                   </div>
-                  <div className="expense-amount">
+                  <div className="expense-amount"
+                    onClick={() => handleEdit(expense)}
+                  >
                     {formatCurrency(expense.amount)}
                   </div>
                   <div className="expense-item-actions">

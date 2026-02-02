@@ -31,15 +31,16 @@ function getSettingsByType(sheetName, type) {
        const values = sheet.getRange(headersConfig.row + 1, headersConfig.column, lastRow - headersConfig.row, headersConfig.numColumns).getValues();
        var lastIndex = 0;
 
-       const rows = values.filter(row => row[0] !== "")
+       const rows = values
         .map((row, index) => {
-         const rowObject = { id: index + headersConfig.dataIndex };
-         headers.forEach((header, i) => {
-            rowObject[header] = row[i];
-        });
-        lastIndex = rowObject.id;
-         return rowObject;
-       });
+            if (row[0] === "") return null;
+            const rowObject = { id: index + headersConfig.dataIndex };
+            headers.forEach((header, i) => {
+                rowObject[header] = row[i];
+            });
+            lastIndex = rowObject.id;
+            return rowObject;
+        }).filter(r => r !== null);
 
        return json({
          success: true,

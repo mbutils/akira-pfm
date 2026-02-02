@@ -32,6 +32,11 @@
   font-weight: 700;
 }
 
+.jar-total-limit {
+  display: flex;
+  align-items: center;
+}
+
 .expense-item {
   display: flex;
   align-items: center;
