@@ -49,7 +49,7 @@ function Sales() {
 
   function onChangeFilter(oriData) {
     const values = form.getFieldsValue();
-    let filteredData = [...oriData] ?? [...dataSales];
+    let filteredData = oriData ?? [...dataSales];
 
     if (values.status && values.status.length > 0) {
       filteredData = filteredData.filter(sale => values.status.includes(sale.status));
