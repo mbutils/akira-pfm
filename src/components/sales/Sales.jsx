@@ -132,7 +132,7 @@ function Sales({ data, setData }) {
                   <div className='sale-date'>
                     {new Date(sale.buy_date).toLocaleDateString('vi-VN')}
                     {isMobile ? (
-                      <Col span={4}>
+                      <Col span={8}>
                         <div className='item-action'>
                           <Button type="text" icon={<EditOutlined />} onClick={() => handleEdit(sale)} />
                           <Button type="text" danger icon={<DeleteOutlined />} onClick={() => handleDelete(sale.id)} />
