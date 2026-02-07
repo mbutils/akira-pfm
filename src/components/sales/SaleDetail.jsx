@@ -26,7 +26,7 @@ const SaleDetail = (props) => {
             } : {
                 buy_date: dayjs(),
                 payment_type: SALES_CONS.BuyType[0].value,
-                status: SALES_CONS.Status.stored,
+                status: 'stored',
             });
         }
     }, [visible, currentSale]);
@@ -164,7 +164,7 @@ const SaleDetail = (props) => {
                                 rules={[{ required: true }]}
                             >
                                 <Select placeholder="Chọn trạng thái" size="large"
-                                    options={Object.keys(SALES_CONS.Status).map(key => ({ value: key, label: SALES_CONS.Status[key] }))}
+                                    options={SALES_CONS.StatusOptions}
                                 ></Select>
                             </Form.Item>
                         </Col>

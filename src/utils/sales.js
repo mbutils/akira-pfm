@@ -14,4 +14,9 @@ export const SALES_CONS = {
         stored: 'Còn hàng',
         imported: 'Chờ về',
     },
+    StatusOptions: [
+        { value: 'sold', label: 'Đã hết' },
+        { value: 'stored', label: 'Còn hàng' },
+        { value: 'imported', label: 'Chờ về' },
+    ]
 }

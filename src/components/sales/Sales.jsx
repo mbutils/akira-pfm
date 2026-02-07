@@ -35,9 +35,9 @@ function Sales({ data, setData }) {
       });
       return;
     }
-    const newData = res.data.sort((a, b) => dayjs(b.last_modified, 'DD/MM/YYYY').toDate() - dayjs(a.last_modified, 'DD/MM/YYYY').toDate())
+    const newData = res.data
+      .sort((a, b) => dayjs(b.buy_date, 'DD/MM/YYYY').toDate() - dayjs(a.buy_date, 'DD/MM/YYYY').toDate())
       .sort((a, b) => b.id - a.id);
-
     setDataSales(newData);
   }
 
