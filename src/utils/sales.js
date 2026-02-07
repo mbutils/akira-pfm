@@ -15,8 +15,12 @@ export const SALES_CONS = {
         imported: 'Chờ về',
     },
     StatusOptions: [
-        { value: 'sold', label: 'Đã hết' },
-        { value: 'stored', label: 'Còn hàng' },
         { value: 'imported', label: 'Chờ về' },
-    ]
+        { value: 'stored', label: 'Còn hàng' },
+        { value: 'sold', label: 'Đã hết' },
+    ],
+    ProductTypeOptions: [
+        { value: 'product', label: 'Sản phẩm' },
+        { value: 'gold', label: 'Vàng' },
+    ],
 }

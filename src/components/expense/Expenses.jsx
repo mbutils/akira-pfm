@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card, Row, Col, Button, Modal, Space, Progress } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, WalletOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteOutlined, WalletOutlined, DownOutlined, UpOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { formatCurrency } from '../../utils/helpers';
 import '../../styles/Expenses.css';
@@ -11,18 +11,62 @@ import LimitJarModal from './LimitJarModal';
 
 function Expenses() {
   const { jars, loadSettings, messageApi, refresh, currentMonth, isMobile } = useSheet();
-  const [dataExpense, setDataExpense] = useState([]);
-  const [jarTotal, setJarTotal] = useState([]);
   const [lastIndex, setLastIndex] = useState(0);
-  const [addJarModal, setAddJarModal] = useState(false);
+  const [dataExpense, setDataExpense] = useState([]);
+  const [expenseDisplay, setExpenseDisplay] = useState([]);
   const [addExpenseModal, setAddExpenseModal] = useState(false);
   const [currentExpense, setCurrentExpense] = useState(null);
-  const [currentJar, setCurrentJar] = useState(null);
+  const [expenseShowMore, setExpenseShowMore] = useState(true);
+
   const [loading, setLoading] = useState(true);
+
+  const [jarDisplay, setJarDisplay] = useState([]);
+  const [jarTotal, setJarTotal] = useState([]);
+  const [jarShowMore, setJarShowMore] = useState(false);
+  const [currentJar, setCurrentJar] = useState(null);
+  const [addJarModal, setAddJarModal] = useState(false);
 
   useEffect(() => {
     initData();
   }, [currentMonth]);
+
+  useEffect(() => {
+    initJars();
+  }, [isMobile, jars]);
+
+  function initJars() {
+    const jarsDis = [];
+    if (isMobile) {
+      jarsDis.push(...jars?.data?.slice(0, 6) || []);
+    } else {
+      jarsDis.push(...jars?.data?.slice(0, 8) || []);
+    }
+    setJarDisplay(jarsDis);
+    setJarShowMore(false);
+  }
+
+  function showMoreJars() {
+    if (jarShowMore) {
+      initJars();
+    } else {
+      setJarDisplay(jars?.data || []);
+    }
+    setJarShowMore(!jarShowMore);
+  }
+
+  function showMoreExpenses() {
+    if (expenseShowMore) {
+      if (expenseDisplay.length + 10 < dataExpense.length) {
+        setExpenseDisplay([...dataExpense.slice(0, expenseDisplay.length + 10)]);
+      } else {
+        setExpenseDisplay([...dataExpense]);
+        setExpenseShowMore(false);
+      }
+    } else {
+      setExpenseDisplay([...dataExpense.slice(0, 10)]);
+      setExpenseShowMore(true);
+    }
+  }
 
   async function initData() {
     setLoading(true);
@@ -41,6 +85,7 @@ function Expenses() {
       .sort((a, b) => dayjs(b.date, 'DD/MM/YYYY').toDate() - dayjs(a.date, 'DD/MM/YYYY').toDate())
       .sort((a, b) => b.id - a.id);
     setDataExpense(newData);
+    setExpenseDisplay([...newData.slice(0, 10)]);
     setLastIndex(res.data.expense.lastIndex);
     setJarTotal(res.data.jarTotal || []);
   }
@@ -90,13 +135,12 @@ function Expenses() {
         className="mb-4 glass-card"
         extra={
           <div className='jar-total-limit'>
-            <span className="card-title-custom me-1">Tổng giới hạn: </span>
             <span className="jar-amount" style={{ color: "#06D6A0" }}>{formatCurrency(getJarTotalLimit())}</span>
           </div>
         }
       >
         <Row gutter={[16, 16]}>
-          {jars?.data?.map(jarItem => {
+          {jarDisplay.map((jarItem) => {
             return (
               <Col xs={12} sm={12} md={6} lg={6} key={jarItem.jar_id}>
                 <Card
@@ -131,6 +175,16 @@ function Expenses() {
               </Col>
             );
           })}
+
+        </Row>
+        <Row>
+          <Button className="jar-show-more-btn" color="default" variant="outlined"
+            style={{ width: '100%', marginTop: '1rem' }}
+            onClick={showMoreJars}
+            icon={jarShowMore ? <UpOutlined /> : <DownOutlined />}
+          >
+            {jarShowMore ? "Ẩn bớt" : "Xem tất cả"}
+          </Button>
         </Row>
       </Card>
 
@@ -149,14 +203,14 @@ function Expenses() {
         }
         className="glass-card"
       >
-        {dataExpense.length === 0 ? (
+        {expenseDisplay.length === 0 ? (
           <div className="text-center py-5 text-muted">
             <WalletOutlined style={{ fontSize: '3rem', marginBottom: '1rem', opacity: 0.3 }} />
             <p>Chưa có khoản chi tiêu nào</p>
           </div>
         ) : (
           <div className='expense-list'>
-            {dataExpense.map(expense => {
+            {expenseDisplay.map(expense => {
               const jarItem = jars?.data?.find(j => j.jar_id === expense.jar_id);
               return (
                 <div key={expense.id} className="expense-item">
@@ -204,6 +258,16 @@ function Expenses() {
             })}
           </div>
         )}
+
+        <Row>
+          <Button className="expense-show-more-btn" color="default" variant="outlined"
+            style={{ width: '100%', marginTop: '1rem' }}
+            onClick={showMoreExpenses}
+            icon={expenseShowMore ? <DownOutlined /> : <UpOutlined />}
+          >
+            {expenseShowMore ? "Thêm 10 dòng" : "Thu gọn"}
+          </Button>
+        </Row>
       </Card>
 
       <ExpenseDetailModal

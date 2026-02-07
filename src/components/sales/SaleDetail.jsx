@@ -27,6 +27,7 @@ const SaleDetail = (props) => {
                 buy_date: dayjs(),
                 payment_type: SALES_CONS.BuyType[0].value,
                 status: 'stored',
+                product_type: 'product',
             });
         }
     }, [visible, currentSale]);
@@ -43,6 +44,7 @@ const SaleDetail = (props) => {
             sell_date: values.sell_date?.format('DD/MM/YYYY') ?? '',
             last_modified: dayjs().format('DD/MM/YYYY'),
             status: values.status,
+            product_type: values.product_type,
         };
 
         let res;
@@ -78,10 +80,6 @@ const SaleDetail = (props) => {
                     form={form}
                     layout="vertical"
                     onFinish={handleSubmit}
-                    initialValues={{
-                        payment_type: 'full',
-                        date: dayjs()
-                    }}
                 >
                     <Form.Item
                         label="Tên sản phẩm"
@@ -170,6 +168,20 @@ const SaleDetail = (props) => {
                         </Col>
                         <Col span={12}>
                             <Form.Item
+                                label="Loại mặt hàng"
+                                name="product_type"
+                                rules={[{ required: true }]}
+                            >
+                                <Select placeholder="Chọn loại mặt hàng" size="large"
+                                    options={SALES_CONS.ProductTypeOptions}
+                                ></Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
                                 label="Hình thức nhập hàng"
                                 name="payment_type"
                                 rules={[{ required: true }]}
@@ -179,28 +191,27 @@ const SaleDetail = (props) => {
                                 ></Select>
                             </Form.Item>
                         </Col>
+                        <Form.Item
+                            noStyle
+                            shouldUpdate={(prevValues, currentValues) =>
+                                prevValues.payment_type !== currentValues.payment_type
+                            }
+                        >
+                            {({ getFieldValue }) =>
+                                getFieldValue('payment_type') === 'installment' ? (
+                                    <Col span={12}>
+                                        <Form.Item
+                                            label="Số tháng trả góp"
+                                            name="installment_months"
+                                            rules={[{ required: true, message: 'Vui lòng nhập số tháng' }]}
+                                        >
+                                            <Input type="number" placeholder="12" size="large" />
+                                        </Form.Item>
+                                    </Col>
+                                ) : null
+                            }
+                        </Form.Item>
                     </Row>
-
-                    <Form.Item
-                        noStyle
-                        shouldUpdate={(prevValues, currentValues) =>
-                            prevValues.payment_type !== currentValues.payment_type
-                        }
-                    >
-                        {({ getFieldValue }) =>
-                            getFieldValue('payment_type') === 'installment' ? (
-                                <Col span={12}>
-                                    <Form.Item
-                                        label="Số tháng trả góp"
-                                        name="installment_months"
-                                        rules={[{ required: true, message: 'Vui lòng nhập số tháng' }]}
-                                    >
-                                        <Input type="number" placeholder="12" size="large" />
-                                    </Form.Item>
-                                </Col>
-                            ) : null
-                        }
-                    </Form.Item>
 
                     <Form.Item>
                         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>

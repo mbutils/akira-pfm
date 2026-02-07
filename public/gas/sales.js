@@ -1,7 +1,7 @@
 
 
  
-const salesHeader = { row: 2, column: 1, numRows: 1, numColumns: 9, dataIndex: 3 }
+const salesHeader = { row: 2, column: 1, numRows: 1, numColumns: 10, dataIndex: 3 }
 
 function getSales(sheetName) {
    try {
