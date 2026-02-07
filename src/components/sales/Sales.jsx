@@ -151,7 +151,7 @@ function Sales() {
               <Form.Item name="status">
                 <Select placeholder="Chọn trạng thái" mode="multiple"
                   maxTagCount="responsive"
-                  options={SALES_CONS.StatusOptions}
+                  options={SALES_CONS.StatusOptions} 
                 ></Select>
               </Form.Item>
             </Col>
