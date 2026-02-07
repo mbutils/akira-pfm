@@ -76,7 +76,7 @@ function Accounts({ data, setData }) {
     <div className="accounts-container">
       {/* Monthly Income Card */}
       <Card 
-        title={<span className="card-title-custom">💰 Thu nhập hàng tháng</span>}
+        title={<span className="card-title-custom">💰 Thu nhập tháng</span>}
         extra={
           <Button 
             type="primary" 

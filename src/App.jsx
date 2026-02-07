@@ -3,11 +3,10 @@ import { ConfigProvider, theme } from 'antd';
 import Dashboard from './components/Dashboard';
 import Expenses from './components/expense/Expenses';
 import Debts from './components/Debts';
-import Sales from './components/Sales';
+import Sales from './components/sales/Sales';
 import Accounts from './components/Accounts';
 import BottomNav from './components/BottomNav';
 import Header from './components/Header';
-import { storage } from './utils/storage';
 
 // Import Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';

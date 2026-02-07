@@ -3,30 +3,55 @@
 }
 
 .sale-item {
-  padding: 1.5rem;
-  margin-bottom: 1rem;
+  padding: .75rem 1.5rem;
+  margin-bottom: .5rem;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.03);
   border-left: 4px solid #06D6A0;
-  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.sale-date {
+  color: #9b9b9b;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .sale-item:hover {
   background: rgba(255, 255, 255, 0.06);
-  transform: translateX(4px);
 }
 
 .sale-title {
   font-size: 1.1rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.sale-item .item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sale-item .item-action {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
 @media (max-width: 768px) {
   .sales-container {
     padding: 0.5rem;
   }
-  
+
   .sale-item {
-    padding: 1rem;
+    padding: .5rem 1rem;
+  }
+
+  .sale-title .title-text {
+    font-size: 1rem;
   }
 }
