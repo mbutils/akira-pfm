@@ -44,6 +44,8 @@ function doGet(e) {
            return updateSale(e.parameter.sheetName, e.parameter.id, JSON.parse(e.parameter.data));
        case "deleteSale":
            return deleteSale(e.parameter.sheetName, e.parameter.id);
+       case "getSaleTotal":
+           return getSaleTotal(e.parameter.sheetName);
 
        default:
            return json({ success: false, message: "Invalid action" });

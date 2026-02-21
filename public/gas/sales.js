@@ -2,6 +2,7 @@
 
  
 const salesHeader = { row: 2, column: 1, numRows: 1, numColumns: 10, dataIndex: 3 }
+const saleTotalHeader = { row: 2, column: 13, numRows: 1, numColumns: 3, dataIndex: 3 }
 
 function getSales(sheetName, statuses, productType) {
    try {
@@ -124,6 +125,41 @@ function deleteSale(sheetName, id) {
        return json({
            success: true,
            message: 'Đã xóa dòng thành công',
+       });
+   } catch (error) {
+       return json({
+           success: false,
+           message: error.toString()
+       });
+   }
+}
+
+function getSaleTotal(sheetName) {
+   try {
+       const sheet = getSpreadSheet(sheetName);
+       if (!sheet) {
+           return json({
+               success: false,
+               message: 'Không tìm thấy sheet: ' + sheetName
+           });
+       }
+
+       const headers = sheet.getRange(saleTotalHeader.row, saleTotalHeader.column, saleTotalHeader.numRows, saleTotalHeader.numColumns).getValues()[0];
+       const values = sheet.getRange(saleTotalHeader.row + 1, saleTotalHeader.column, 1, saleTotalHeader.numColumns).getValues();
+
+       const rows = values.filter(row => row[0] !== "")
+           .map((row, index) => {
+               const rowObject = { id: index + saleTotalHeader.dataIndex };
+               headers.forEach((header, i) => {
+                   rowObject[header] = row[i];
+               });
+               return rowObject;
+           });
+
+       return json({
+           success: true,
+           data: rows,
+           headers: headers,
        });
    } catch (error) {
        return json({

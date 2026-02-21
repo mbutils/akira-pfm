@@ -5,8 +5,8 @@ const SaleService = {
     API_URL: import.meta.env.VITE_AKIRA_SHEET_APP_URL,
     SHEET_NAME: "sales",
 
-    async getTotalMonth(currentMonth) {
-        const res = await httpGet(this.API_URL, { action: 'getSaleTotalMonth', sheetName: this.SHEET_NAME, currentMonth });
+    async getSaleTotal(currentMonth) {
+        const res = await httpGet(this.API_URL, { action: 'getSaleTotal', sheetName: this.SHEET_NAME, currentMonth });
         return res.data;
     },
     async getSales(currentMonth, statuses, productType) {
