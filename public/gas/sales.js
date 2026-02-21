@@ -1,8 +1,8 @@
 
 
  
-const salesHeader = { row: 2, column: 1, numRows: 1, numColumns: 10, dataIndex: 3 }
-const saleTotalHeader = { row: 2, column: 13, numRows: 1, numColumns: 3, dataIndex: 3 }
+const salesHeader = { row: 2, column: 1, numRows: 1, numColumns: 12, dataIndex: 3 }
+const saleTotalHeader = { row: 2, column: 14, numRows: 1, numColumns: 3, dataIndex: 3 }
 
 function getSales(sheetName, statuses, productType) {
    try {

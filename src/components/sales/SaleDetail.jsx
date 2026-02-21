@@ -15,7 +15,8 @@ const SaleDetail = (props) => {
     // Watch form values for profit calculation
     const buyPrice = Form.useWatch('buy_price', form);
     const sellPrice = Form.useWatch('sell_price', form);
-    const calculatedProfit = buyPrice && sellPrice ? parseFloat(sellPrice) - parseFloat(buyPrice) : 0;
+    const quantity = Form.useWatch('quantity', form);
+    const calculatedProfit = buyPrice && sellPrice ? (parseFloat(sellPrice) - parseFloat(buyPrice)) * parseInt(quantity || 1) : 0;
 
     useEffect(() => {
         if (visible) {
@@ -28,6 +29,7 @@ const SaleDetail = (props) => {
                 payment_type: SALES_CONS.BuyType[0].value,
                 status: 'stored',
                 product_type: 'product',
+                quantity: 1,
             });
         }
     }, [visible, currentSale]);
@@ -45,6 +47,7 @@ const SaleDetail = (props) => {
             last_modified: dayjs().format('DD/MM/YYYY'),
             status: values.status,
             product_type: values.product_type,
+            quantity: parseInt(values.quantity || 1),
         };
 
         let res;
@@ -87,6 +90,14 @@ const SaleDetail = (props) => {
                         rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm' }]}
                     >
                         <Input placeholder="Ví dụ: iPhone 15" size="large" />
+                    </Form.Item>
+                    
+                    <Form.Item
+                        label="Số lượng"
+                        name="quantity"
+                        rules={[{ required: true, message: 'Vui lòng nhập số lượng' }]}
+                    >
+                        <Input placeholder="Ví dụ: 1" size="large" />
                     </Form.Item>
 
                     <Row gutter={16}>

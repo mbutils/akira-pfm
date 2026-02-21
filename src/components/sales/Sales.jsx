@@ -87,8 +87,8 @@ function Sales() {
   };
 
   function renderProfit(sale) {
-    const profit = sale.sell_price - sale.buy_price;
-    const profitPercent = ((profit / sale.buy_price) * 100).toFixed(1);
+    const profit = (sale.sell_price - sale.buy_price) * sale.quantity;
+    const profitPercent = ((profit / (sale.buy_price * sale.quantity)) * 100).toFixed(1);
     const isProfit = profit >= 0;
 
     return (
