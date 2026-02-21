@@ -3,7 +3,7 @@ import { httpGet } from "./callAxios";
 
 const SaleService = {
     API_URL: import.meta.env.VITE_AKIRA_SHEET_APP_URL,
-    SHEET_NAME: "sales",
+    SHEET_NAME: "sales_2026",
 
     async getSaleTotal(currentMonth) {
         const res = await httpGet(this.API_URL, { action: 'getSaleTotal', sheetName: this.SHEET_NAME, currentMonth });
