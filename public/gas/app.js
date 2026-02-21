@@ -37,7 +37,7 @@ function doGet(e) {
            return deleteHistory(e.parameter.sheetName, e.parameter.id);
 
        case "getSales":
-           return getSales(e.parameter.sheetName);
+           return getSales(e.parameter.sheetName, e.parameter.statuses ? e.parameter.statuses.split(',') : null, e.parameter.productType);
        case "insertSale":
            return insertSale(e.parameter.sheetName, JSON.parse(e.parameter.data));
        case "updateSale":

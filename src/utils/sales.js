@@ -22,5 +22,6 @@ export const SALES_CONS = {
     ProductTypeOptions: [
         { value: 'product', label: 'Sản phẩm' },
         { value: 'gold', label: 'Vàng' },
+        { value: 'stock', label: 'Chứng khoán' },
     ],
 }

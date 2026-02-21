@@ -9,8 +9,9 @@ const SaleService = {
         const res = await httpGet(this.API_URL, { action: 'getSaleTotalMonth', sheetName: this.SHEET_NAME, currentMonth });
         return res.data;
     },
-    async getSales(currentMonth) {
-        const res = await httpGet(this.API_URL, { action: 'getSales', sheetName: this.SHEET_NAME, currentMonth });
+    async getSales(currentMonth, statuses, productType) {
+        const res = await httpGet(this.API_URL, { action: 'getSales', sheetName: this.SHEET_NAME, currentMonth,
+            statuses: statuses?.join(','), productType });
         return res.data;
     },
     async insert(data) {

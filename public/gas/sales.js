@@ -3,7 +3,7 @@
  
 const salesHeader = { row: 2, column: 1, numRows: 1, numColumns: 10, dataIndex: 3 }
 
-function getSales(sheetName) {
+function getSales(sheetName, statuses, productType) {
    try {
        const sheet = getSpreadSheet(sheetName);
        if (!sheet) {
@@ -32,6 +32,15 @@ function getSales(sheetName) {
                    rowObject[header] = row[i];
                });
                return rowObject;
+           })
+           .filter(row => {
+               if (statuses && statuses.length > 0 && !statuses.includes(row.status)) {
+                   return false;
+               }
+               if (productType && productType !== 'all' && row.product_type !== productType) {
+                   return false;
+               }
+               return true;
            });
 
        return json({

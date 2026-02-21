@@ -17,7 +17,6 @@ function Sales() {
   const [dataSales, setDataSales] = useState([]);
   const [currentSale, setCurrentSale] = useState(null);
   const [showMore, setShowMore] = useState(true);
-  const [saleFiltered, setSaleFiltered] = useState([]);
   const [saleDisplay, setSaleDisplay] = useState([]);
 
   const [loading, setLoading] = useState(false);
@@ -35,38 +34,22 @@ function Sales() {
 
   function showMoreSales() {
     if (showMore) {
-      if (saleDisplay.length + pageSize < saleFiltered.length) {
+      if (saleDisplay.length + pageSize < dataSales.length) {
         setSaleDisplay([...saleDisplay.slice(0, saleDisplay.length + pageSize)]);
       } else {
-        setSaleDisplay([...saleFiltered]);
+        setSaleDisplay([...dataSales]);
         setShowMore(false);
       }
     } else {
-      setSaleDisplay([...saleFiltered.slice(0, pageSize)]);
+      setSaleDisplay([...dataSales.slice(0, pageSize)]);
       setShowMore(true);
     }
   }
 
-  function onChangeFilter(oriData) {
-    const values = form.getFieldsValue();
-    let filteredData = oriData ?? [...dataSales];
-
-    if (values.status && values.status.length > 0) {
-      filteredData = filteredData.filter(sale => values.status.includes(sale.status));
-    }
-
-    if (values.product_type && values.product_type !== 'all') {
-      filteredData = filteredData.filter(sale => sale.product_type === values.product_type);
-    }
-
-    setSaleFiltered(filteredData);
-    setSaleDisplay([...filteredData.slice(0, pageSize)]);
-    setShowMore(true);
-  }
-
   async function loadData() {
     setLoading(true);
-    const res = await SaleService.getSales(currentMonth);
+    const values = form.getFieldsValue();
+    const res = await SaleService.getSales(currentMonth, values.status, values.product_type === 'all' ? null : values.product_type);
     setLoading(false);
 
     if (!res.success) {
@@ -79,7 +62,8 @@ function Sales() {
     const newData = res.data
       .sort((a, b) => dayjs(b.buy_date, 'DD/MM/YYYY').toDate() - dayjs(a.buy_date, 'DD/MM/YYYY').toDate());
     setDataSales(newData);
-    onChangeFilter(newData);
+    setSaleDisplay([...newData.slice(0, pageSize)]);
+    setShowMore(true);
   }
 
   const handleEdit = (sale) => {
@@ -144,7 +128,7 @@ function Sales() {
         <Form
           form={form}
           layout="vertical"
-          onValuesChange={() => onChangeFilter()}
+          onValuesChange={() => loadData()}
         >
           <Row gutter={16}>
             <Col span={12}>
@@ -181,10 +165,10 @@ function Sales() {
                         <span className='title-text'>{sale.name}</span>
                         <div className='sale-tag'>
                           <Tag color={sale.status === 'sold' ? 'red' : sale.status === 'stored' ? 'green' : 'orange'}>{SALES_CONS.Status[sale.status]}</Tag>
-                          <Tag color="blue">{SALES_CONS.BuyType[sale.payment_type]}{SALES_CONS.BuyType.find(i => i.value === sale.payment_type).label}</Tag>
+                          {/* <Tag color="blue">{SALES_CONS.BuyType[sale.payment_type]}{SALES_CONS.BuyType.find(i => i.value === sale.payment_type).label}</Tag>
                           {sale.payment_type === 'installment' && (
                             <Tag>{sale.installment_months} tháng</Tag>
-                          )}
+                          )} */}
                         </div>
                       </div>
                       {!isMobile && (
