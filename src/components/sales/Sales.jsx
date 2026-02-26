@@ -27,7 +27,7 @@ function Sales() {
   useEffect(() => {
     form.setFieldsValue({
       status: SALES_CONS.StatusOptions.filter(i => i.value !== 'sold').map(i => i.value),
-      product_type: 'product',
+      product_type: 'stock',
     })
     loadData();
   }, []);
